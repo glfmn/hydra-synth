@@ -3,7 +3,7 @@ Format for adding functions to hydra. For each entry in this file, hydra automat
 
 {
   name: 'osc', // name that will be used to access function in js as well as in glsl
-  type: 'src', // can be 'src', 'color', 'combine', 'combineCoords'. see below for more info
+  type: 'src', // can be 'src', 'color', 'combine', 'combineCoord', 'combineBy'. see below for more info
   inputs: [
     {
       name: 'freq',
@@ -63,6 +63,10 @@ const types = {
   'combineCoord': {
     returnType: 'vec2',
     args: ['vec2 _st', 'vec4 _c0']
+  },
+  'combineBy': {
+    returnType: 'vec4',
+    args: ['vec4 _c0', 'vec4 _c1', 'vec4 _amount']
   }
 }
 
@@ -718,6 +722,12 @@ export default () => [
   ],
   glsl:
 `   return _c0*(1.0-amount)+_c1*amount;`
+},
+{
+  name: 'blendBy',
+  type: 'combineBy',
+  inputs: [],
+  glsl: `    return _c0*(1.0-_amount) + _c1*_amount;`
 },
 {
   name: 'mult',

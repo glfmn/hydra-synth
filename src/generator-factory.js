@@ -91,6 +91,10 @@ const typeLookup = {
   'combineCoord': {
     returnType: 'vec2',
     args: ['vec2 _st', 'vec4 _c0']
+  },
+  'combineBy': {
+    returnType: 'vec4',
+    args: ['vec4 _c0', 'vec4 _c1', 'vec4 _amount']
   }
 }
 // expects glsl of format
@@ -148,14 +152,17 @@ function processGlsl(obj) {
   }
 `
 
-  // add extra input to beginning for backward combatibility @todo update compiler so this is no longer necessary
-    if(obj.type === 'combine' || obj.type === 'combineCoord') obj.inputs.unshift({
-        name: 'color',
-        type: 'vec4'
-      })
+    // add extra input to beginning for backward combatibility @todo update compiler so this is no longer necessary
+    if(obj.type === 'combine' || obj.type === 'combineCoord') {
+      obj.inputs.unshift({ name: 'color', type: 'vec4' })
+    } else if (obj.type === 'combineBy') {
+      obj.inputs.unshift({ name: 'color', type: 'vec4' })
+      obj.inputs.unshift({ name: 'amount', type: 'vec4' })
+    }
+
     return Object.assign({}, obj, { glsl: glslFunction})
   } else {
-    console.warn(`type ${obj.type} not recognized`, obj)
+    console.warn(`type ${obj.type} not recognized`, obj, typeLookup)
   }
 
 }

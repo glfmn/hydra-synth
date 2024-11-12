@@ -60,8 +60,18 @@ function generateGlsl (transforms, shaderParams) {
       (uv) => `${generateGlsl(inputs[0].value.transforms, shaderParams)(uv)}` :
       (inputs[0].isUniform ? () => inputs[0].name : () => inputs[0].value)
       fragColor = (uv) => `${f0(`${shaderString(`${uv}, ${f1(uv)}`, transform.name, inputs.slice(1), shaderParams)}`)}`
-
-
+    } else if (transform.transform.type == 'combineBy') {
+      // combining 3 generated shader strings:
+      // 1. UV
+      // 2. Generator used for combination
+      // 3. Generator used as parameter for the combination
+      var f1 = inputs[0].value && inputs[0].value.transforms?
+        (uv) => `${generateGlsl(inputs[0].value.transforms, shaderParams)(uv)}` :
+        (inputs[0].isUniform? () => inputs[0].name : () => inputs[0].value)
+      var am = inputs[1].value && inputs[1].value.transforms?
+        (uv) => `${generateGlsl(inputs[1].value.transforms, shaderParams)(uv)}` :
+        (inputs[1].isUniform? () => inputs[1].name : () => inputs[1].value)
+      fragColor = (uv) => `${`${shaderString(`${f0(uv)}, ${f1(uv)}, ${am(uv)}`, transform.name, inputs.slice(2), shaderParams)}`}`
     }
   })
 //  console.log(fragColor)
