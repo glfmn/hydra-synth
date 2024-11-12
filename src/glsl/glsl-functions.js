@@ -46,27 +46,37 @@ The value in the 'type' field lets the parser know which type the function will 
 const types = {
   'src': {
     returnType: 'vec4',
-    args: ['vec2 _st']
+    args: [{ type: 'vec2', name: '_st' }]
   },
   'coord': {
     returnType: 'vec2',
-    args: ['vec2 _st']
+    args: [{ type: 'vec2', name: '_st'}]
   },
   'color': {
     returnType: 'vec4',
-    args: ['vec4 _c0']
+    args: [{ type: 'vec4', name: '_c0'}]
   },
   'combine': {
     returnType: 'vec4',
-    args: ['vec4 _c0', 'vec4 _c1']
+    args: [
+      { type: 'vec4', name: '_c0'},
+      { type: 'vec4', name: '_c1'}
+    ]
   },
   'combineCoord': {
     returnType: 'vec2',
-    args: ['vec2 _st', 'vec4 _c0']
+    args: [
+      { type: 'vec2', name: '_st'},
+      { type: 'vec4', name: '_c0'},
+    ]
   },
   'combineBy': {
     returnType: 'vec4',
-    args: ['vec4 _c0', 'vec4 _c1', 'vec4 _amount']
+    args: [
+      { type: 'vec4', name: '_c0' },
+      { type: 'vec4', name: '_c1' },
+      { type: 'vec4', name: '_amount' }
+    ]
   }
 }
 
