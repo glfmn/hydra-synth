@@ -736,8 +736,14 @@ export default () => [
 {
   name: 'blendBy',
   type: 'combineBy',
-  inputs: [],
-  glsl: `    return _c0*(1.0-_amount) + _c1*_amount;`
+  inputs: [
+    {
+      type: 'float',
+      name: 'amount',
+      default: 0.5,
+    }
+  ],
+  glsl: `return mix(_c0, _c1, _amount*amount);`
 },
 {
   name: 'mult',
