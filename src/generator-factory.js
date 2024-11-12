@@ -74,27 +74,37 @@ class GeneratorFactory {
 const typeLookup = {
   'src': {
     returnType: 'vec4',
-    args: ['vec2 _st']
+    args: [{ type: 'vec2', name: '_st' }]
   },
   'coord': {
     returnType: 'vec2',
-    args: ['vec2 _st']
+    args: [{ type: 'vec2', name: '_st'}]
   },
   'color': {
     returnType: 'vec4',
-    args: ['vec4 _c0']
+    args: [{ type: 'vec4', name: '_c0'}]
   },
   'combine': {
     returnType: 'vec4',
-    args: ['vec4 _c0', 'vec4 _c1']
+    args: [
+      { type: 'vec4', name: '_c0'},
+      { type: 'vec4', name: '_c1'}
+    ]
   },
   'combineCoord': {
     returnType: 'vec2',
-    args: ['vec2 _st', 'vec4 _c0']
+    args: [
+      { type: 'vec2', name: '_st'},
+      { type: 'vec4', name: '_c0'},
+    ]
   },
   'combineBy': {
     returnType: 'vec4',
-    args: ['vec4 _c0', 'vec4 _c1', 'vec4 _amount']
+    args: [
+      { type: 'vec4', name: '_c0' },
+      { type: 'vec4', name: '_c1' },
+      { type: 'vec4', name: '_amount' }
+    ]
   }
 }
 // expects glsl of format
@@ -139,11 +149,11 @@ const typeLookup = {
 function processGlsl(obj) {
   let t = typeLookup[obj.type]
   if(t) {
-  let baseArgs = t.args.map((arg) => arg).join(", ")
+  let baseArgs = t.args.map((arg) => `${arg.type} ${arg.name}`).join(", ")
   // @todo: make sure this works for all input types, add validation
   let customArgs = obj.inputs.map((input) => `${input.type} ${input.name}`).join(', ')
   let args = `${baseArgs}${customArgs.length > 0 ? ', '+ customArgs: ''}`
-//  console.log('args are ', args)
+  console.log('args are ', args)
 
     let glslFunction =
 `
@@ -152,13 +162,10 @@ function processGlsl(obj) {
   }
 `
 
-    // add extra input to beginning for backward combatibility @todo update compiler so this is no longer necessary
-    if(obj.type === 'combine' || obj.type === 'combineCoord') {
-      obj.inputs.unshift({ name: 'color', type: 'vec4' })
-    } else if (obj.type === 'combineBy') {
-      obj.inputs.unshift({ name: 'color', type: 'vec4' })
-      obj.inputs.unshift({ name: 'amount', type: 'vec4' })
-    }
+    t.args.slice(1).forEach((input) => {
+      obj.inputs.unshift(input);
+      console.log(input)
+    });
 
     return Object.assign({}, obj, { glsl: glslFunction})
   } else {
