@@ -153,7 +153,7 @@ function processGlsl(obj) {
   // @todo: make sure this works for all input types, add validation
   let customArgs = obj.inputs.map((input) => `${input.type} ${input.name}`).join(', ')
   let args = `${baseArgs}${customArgs.length > 0 ? ', '+ customArgs: ''}`
-  console.log('args are ', args)
+  // console.log('args are ', args)
 
     let glslFunction =
 `
@@ -161,11 +161,7 @@ function processGlsl(obj) {
       ${obj.glsl}
   }
 `
-
-    t.args.slice(1).forEach((input) => {
-      obj.inputs.unshift(input);
-      console.log(input)
-    });
+    obj.inputs = t.args.slice(1).concat(obj.inputs);
 
     return Object.assign({}, obj, { glsl: glslFunction})
   } else {
